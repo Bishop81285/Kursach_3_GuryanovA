@@ -4,13 +4,11 @@ from cfg.settings import DATA_JSON
 from develop.trans_class import Transactions
 
 
-def get_data() -> list[dict]:
+def get_data(_path: str = DATA_JSON) -> list[dict] | str:
     """
     Get json data from file and convert to python format
     :return: python-json data
     """
-    _path = DATA_JSON
-
     with open(_path) as file:
         return json.load(file)
 
