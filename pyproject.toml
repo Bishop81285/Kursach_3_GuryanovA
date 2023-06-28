@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "kursach-3-guryanova"
+version = "0.1.0"
+description = ""
+authors = ["Artyom Guryanov <bishop81285@gmail.com>"]
+readme = "README.md"
+packages = [{include = "kursach_3_guryanova"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+pytest-faker = "^2.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
