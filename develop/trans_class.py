@@ -1,6 +1,28 @@
 from datetime import datetime
 
 
+def mask_card_number(card_numb) -> str:
+    """
+    Represent card number in form XXXX XX** **** XXXX
+    :param card_numb: example 4195191172583802
+    :return: hidden card number with '*'
+    """
+    parts = [card_numb[i:i + 4] for i in range(0, len(card_numb), 4)]
+
+    masked_parts = []
+    for i, part in enumerate(parts):
+        if i == 0 or i == len(parts) - 1:
+            masked_parts.append(part)
+        elif i == 1:
+            masked_parts.append(part[:2] + '**')
+        else:
+            masked_parts.append('**' * 2)
+
+    masked_number = ' '.join(masked_parts)
+
+    return masked_number
+
+
 class Transactions:
     def __init__(self, **kwargs):
         self._id: int = kwargs['id']
@@ -36,12 +58,10 @@ class Transactions:
             return short_account
         else:
             if len(details) == 3:
-                short_card = details[0] + ' ' + details[1] + ' ' + details[2][:4] + ' ' + \
-                                  details[2][4:6] + '**' + ' ' + '****' + ' ' + details[2][-4:]
+                short_card = details[0] + ' ' + details[1] + ' ' + mask_card_number(details[2])
                 return short_card
             else:
-                short_card = details[0] + ' ' + details[1][:4] + ' ' + \
-                                  details[1][4:6] + '**' + ' ' + '****' + ' ' + details[1][-4:]
+                short_card = details[0] + ' ' + mask_card_number(details[1])
                 return short_card
 
     def convert_details(self) -> tuple[str, str]:
