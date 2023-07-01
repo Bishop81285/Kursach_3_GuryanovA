@@ -1,6 +1,6 @@
 import json
 
-from develop.utils import get_data, show_last_executed_trans, show_last_canceled_trans
+from develop.utils import get_data, show_last_trans
 
 
 def test__get_data(json_data: tuple, faker):
@@ -13,7 +13,7 @@ def test__get_data(json_data: tuple, faker):
 
 
 def test__show_last_executed_trans(json_trans_executed: list[dict], capsys):
-    show_last_executed_trans(json_trans_executed, 1)
+    show_last_trans(json_trans_executed, 1)
 
     captured = capsys.readouterr()
 
@@ -22,7 +22,7 @@ def test__show_last_executed_trans(json_trans_executed: list[dict], capsys):
 
     assert expected_output == captured.out
 
-    show_last_executed_trans(json_trans_executed, 3)
+    show_last_trans(json_trans_executed, 3)
     captured = capsys.readouterr()
 
     expected_output = f'AmountError: set correct amount of transactions (< {len(json_trans_executed) + 1})\n'
@@ -31,7 +31,7 @@ def test__show_last_executed_trans(json_trans_executed: list[dict], capsys):
 
 
 def test__show_last_canceled_trans(json_trans_canceled: list[dict], capsys):
-    show_last_canceled_trans(json_trans_canceled, 1)
+    show_last_trans(json_trans_canceled, 1, type_operation='CANCELED')
 
     captured = capsys.readouterr()
 
@@ -40,7 +40,7 @@ def test__show_last_canceled_trans(json_trans_canceled: list[dict], capsys):
 
     assert expected_output == captured.out
 
-    show_last_canceled_trans(json_trans_canceled, 3)
+    show_last_trans(json_trans_canceled, 3, type_operation='CANCELED')
     captured = capsys.readouterr()
 
     expected_output = f'AmountError: set correct amount of transactions (< {len(json_trans_canceled) + 1})\n'
@@ -49,7 +49,7 @@ def test__show_last_canceled_trans(json_trans_canceled: list[dict], capsys):
 
 
 def test__show_last_trans_no_from(json_trans_nofrom, capsys):
-    show_last_executed_trans(json_trans_nofrom, 1)
+    show_last_trans(json_trans_nofrom, 1)
 
     captured = capsys.readouterr()
 
