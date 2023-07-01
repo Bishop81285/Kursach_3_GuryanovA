@@ -13,55 +13,26 @@ def get_data(_path: str = DATA_JSON) -> list[dict] | str:
         return json.load(file)
 
 
-def show_last_executed_trans(data_trans: list[dict], amount: int = 5) -> None:
+def show_last_trans(data_trans: list[dict], amount: int = 5, type_operation='EXECUTED') -> None:
     """
-    Show last 'amount' transactions that were executed
+    Show last 'amount' transactions that were executed or canceled
     :param data_trans: python-json format data
     :param amount: number of transactions
+    :param type_operation: chose what kind of transaction you want to view
     :return: nothing, just printing
     """
-    executed_trans = [el for el in data_trans if 'state' in el and el['state'] == 'EXECUTED']
+    _trans = [el for el in data_trans if 'state' in el and el['state'] == type_operation]
 
-    if amount > len(executed_trans):
-        print(f'AmountError: set correct amount of transactions (< {len(executed_trans) + 1})')
+    if amount > len(_trans):
+        print(f'AmountError: set correct amount of transactions (< {len(_trans) + 1})')
         return
 
-    executed_trans_date_sorted = sorted(executed_trans, key=lambda el: el['date'], reverse=True)
+    _trans_date_sorted = sorted(_trans, key=lambda el: el['date'], reverse=True)
 
-    executed_trans_view = []
+    _trans_view = [Transactions(**el) for el in _trans_date_sorted[:amount]]
 
-    for i in range(amount):
-        executed_trans_view.append(Transactions(**executed_trans_date_sorted[i]))
+    print(f'{type_operation}:')
 
-    print('EXECUTED:')
-
-    for trans in executed_trans_view:
-        print(trans.view_trans())
-        print('')
-
-
-def show_last_canceled_trans(data_trans: list[dict], amount: int = 5) -> None:
-    """
-    Show last 'amount' transactions that were canceled
-    :param data_trans: python-json format data
-    :param amount: number of transactions
-    :return: nothing, just printing
-    """
-    canceled_trans = [el for el in data_trans if 'state' in el and el['state'] == 'CANCELED']
-
-    if amount > len(canceled_trans):
-        print(f'AmountError: set correct amount of transactions (< {len(canceled_trans) + 1})')
-        return
-
-    canceled_trans_date_sorted = sorted(canceled_trans, key=lambda el: el['date'], reverse=True)
-
-    canceled_trans_view = []
-
-    for i in range(amount):
-        canceled_trans_view.append(Transactions(**canceled_trans_date_sorted[i]))
-
-    print('CANCELED:')
-
-    for trans in canceled_trans_view:
+    for trans in _trans_view:
         print(trans.view_trans())
         print('')

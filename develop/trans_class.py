@@ -11,12 +11,13 @@ def mask_card_number(card_numb) -> str:
 
     masked_parts = []
     for i, part in enumerate(parts):
-        if i == 0 or i == len(parts) - 1:
-            masked_parts.append(part)
-        elif i == 1:
+        if i == 1:
             masked_parts.append(part[:2] + '**')
         else:
             masked_parts.append('**' * 2)
+
+    masked_parts[0] = parts[0]
+    masked_parts[-1] = parts[-1]
 
     masked_number = ' '.join(masked_parts)
 
@@ -25,20 +26,17 @@ def mask_card_number(card_numb) -> str:
 
 class Transactions:
     def __init__(self, **kwargs):
-        self._id: int = kwargs['id']
-        self.state: str = kwargs['state']
-        self.date: str = kwargs['date']
-        self.amount: str = kwargs['operationAmount']['amount']
-        self.currency: str = kwargs['operationAmount']['currency']['name']
-        self.description: str = kwargs['description']
+        self._id: int = kwargs.get('id', 0)
+        self.state: str = kwargs.get('state', '')
+        self.date: str = kwargs.get('date', '')
+        self.amount: str = (kwargs.get('operationAmount', '')).get('amount', '')
+        self.currency: str = ((kwargs.get('operationAmount', '')).get('currency', '')).get('name', '')
+        self.description: str = kwargs.get('description', '')
 
         # Not all transactions contain the field "from"
-        if 'from' in kwargs:
-            self._from: str = kwargs['from']
-        else:
-            self._from: str = ''
+        self._from = kwargs.get('from', '')
 
-        self.to: str = kwargs['to']
+        self.to: str = kwargs.get('to', '')
 
     def __repr__(self):
         return f'{self.__class__.__name__}: {self.__dict__}'
